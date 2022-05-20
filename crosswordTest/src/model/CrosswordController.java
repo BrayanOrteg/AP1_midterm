@@ -19,6 +19,22 @@ public class CrosswordController {
 	 * the initial state of a crossword puzzle
 	 */
 	public void initCrossword(String[][] puzzle) {
+		crossword= new Cell [puzzle.length] [puzzle[0].length];
+		int number=0;
+
+		for (int i=0; i<puzzle.length;i++){
+			for(int j=0;j<puzzle[0].length;j++){
+				number++;
+				if (puzzle[i][j].equals(" ")){
+					number++;
+					
+					crossword[i][j]= new Cell (CellType.BLACK, puzzle[i][j],number);
+
+				}else{
+					crossword[i][j]= new Cell (CellType.CLOSED, puzzle[i][j],number);
+				}
+			}
+		}
 		
 		
 	}
@@ -51,8 +67,23 @@ public class CrosswordController {
 	 * @return
 	 */
 	public String getHint(String letter) {
-		
-		return null;
+		boolean find=false;
+
+		String out=" Sorry the crossword dont have any word with the letter: "+ letter;
+
+		for (int i=0; i<crossword.length && find==false;i ++){
+			for (int j=0; j<crossword[0].length && find==false; j ++){
+				if(crossword[i][j].getState()==CellType.CLOSED && crossword[i][j].getLetter().equals(letter)){
+					crossword[i][j].setState(CellType.OPEN);
+					find=true;
+
+					out="The crossword have a word with the letter: " + letter + " in the cell: " + crossword[i][j].getNumber();
+				}
+
+			}
+
+		}
+		return out;
 	}
 	
 	/**
@@ -92,7 +123,10 @@ public class CrosswordController {
 						numbers += " ---  ";
 						letters += " ---  ";
 						
-					}else {
+					}else if((actual.getState()==CellType.CLOSED)) {
+						numbers += " "+actual.getNumber() +"   ";
+						letters += "      ";
+					}else{
 						numbers += " "+actual.getNumber() +"   ";
 						letters += "    "+ actual.getLetter() + " ";
 					}
@@ -103,8 +137,12 @@ public class CrosswordController {
 						numbers += " ---  ";
 						letters += " ---  ";
 						
-					}else {
+					}else if((actual.getState()==CellType.CLOSED)) {
 						numbers += " "+actual.getNumber() +"    ";
+						letters += "      ";
+					}
+					else{
+						numbers += " "+actual.getNumber() +"   ";
 						letters += "    "+ actual.getLetter() + " ";
 					}
 				}
