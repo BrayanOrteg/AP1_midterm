@@ -93,8 +93,25 @@ public class CrosswordController {
 	 * @return
 	 */
 	public String evaluateCell(String letter, int num) {
-		
-		return null;
+
+		boolean find=false;
+
+		String out=" Sorry the letter: "+ letter + " isnt in the cell";
+
+		for (int i=0; i<crossword.length && find==false;i ++){
+			for (int j=0; j<crossword[0].length && find==false; j ++){
+				if(crossword[i][j].getState()==CellType.CLOSED && crossword[i][j].getLetter().equals(letter) && crossword[i][j].getNumber()==num){
+					crossword[i][j].setState(CellType.OPEN);
+					find=true;
+
+					out="The letter : " + letter + " is in the cell " + crossword[i][j].getNumber();
+				}
+
+			}
+
+		}
+		return out;
+
 	}
 	
 	public String showCrossword() {
